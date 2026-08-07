@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shared-volume-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shared-volume-deployment
+  template:
+    metadata:
+      labels:
+        app: shared-volume-deployment
+    spec:
+      containers:
+      - name: writer
+        image: nginx
+        command: ["/bin/sh", "-c", "echo 'Hello world from writer' > /data/hello.txt; sleep 3600"]
+        volumeMounts:
+        - name: shared-data
+          mountPath: /data
+      - name: reader
+        image: nginx
+        command: ["/bin/sh", "-c", "cat /data/hello.txt; sleep 3600"]
+        volumeMounts:
+        - name: shared-data
+          mountPath: /data
+      volumes:
+      - name: shared-data
+        emptyDir: {}
