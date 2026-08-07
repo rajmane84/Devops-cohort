@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany # It means many pods can read and write this persistant volume
+  storageClassName: nfs # This will change as you change the persistant volume from nfs to aws to vultr
+  nfs:
+    path: /offline-video
+    server: 127.0.0.1
