@@ -1,0 +1,31 @@
+# This yaml file creates a pvc, which automatically creates a pv and a block storage
+apiVersion: apps/v1
+kind: PersistantVolumeClaim
+metadata:
+  name: automatic-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi # 10 Gb
+  storageClassName: vultr-block-storage-hdd
+---
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: mongo-pod
+spec:
+  containers:
+  - name: mongo-pod
+    image: mongod:4.4
+    command: ["mongod", "--bind_ip_all"]
+    ports:
+    - containerPort: 27017
+    volumeMounts:
+    - name: mongo-storage
+      mountPath: /data/db
+  volumes:
+  - name: mongo-storage
+    PersistantVolumeClaim:
+      claimName: automatic-pv  
