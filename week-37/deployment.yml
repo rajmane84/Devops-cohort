@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend # this is deployment resource name
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-server
+  template:
+    metadata:
+      labels:
+        app: backend-server
+    spec:
+      containers:
+      - name: backend-process # this is container name
+        image: 100xdevs/week-28:latest
+        ports:
+        - containerPort: 3000
+        # updated the deployment.yml file to have a resource limits
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
